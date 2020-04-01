@@ -1,0 +1,39 @@
+.Order {
+  width: 80%;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 3px #aaa;
+  padding: 10px;
+  margin: 10px auto;
+  box-sizing: border-box;
+}
+
+.Ingredients{
+  text-transform: capitalize;
+  display: inline-block;
+  margin: 0 8px;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+.Ingredients:hover{
+  background-color: #703809;
+  color: white;
+  cursor: default;
+}
+
+.Delete {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  color: red;
+  text-transform: uppercase;
+  padding: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 5px 3px 8px #aaa;
+}
+
+.Delete:hover{
+  background-color: red;
+  color: white;
+  transition: 0.3s;
+}
