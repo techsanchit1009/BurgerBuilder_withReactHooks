@@ -1,42 +1,39 @@
-import React, { Component } from "react";
+import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import ContactDetails from "./ContactDetails/ContactDetails";
 import CheckoutSummary from "../../components/Order/CheckoutSummary/CheckoutSummary";
 
-class Checkout extends Component {
-
-  checkoutContinuedHandler = () => {
-    this.props.history.replace("/checkout/contact-details");
+const checkout = props => {
+  const checkoutContinuedHandler = () => {
+    props.history.replace("/checkout/contact-details");
   };
 
-  checkoutCancelledHandler = () => {
-    this.props.history.goBack();
+  const checkoutCancelledHandler = () => {
+    props.history.goBack();
   };
 
-  render() {
-    let checkoutSummary = <Redirect to="/" />
-    if (this.props.ings) {
-      const purchasedRedirect = this.props.purchased ? <Redirect to="/" /> : null;
-      checkoutSummary = (
-        <div>
-          {purchasedRedirect}
-          <CheckoutSummary
-            ingredients={this.props.ings}
-            checkoutCancelled={this.checkoutCancelledHandler}
-            checkoutContinued={this.checkoutContinuedHandler}
-          />  
-          <Route
-            path={this.props.match.path + "/contact-details"}
-            component={ContactDetails}
-          />
-        </div>
-      );
-    }
-
-    return checkoutSummary ;
+  let checkoutSummary = <Redirect to="/" />;
+  if (props.ings) {
+    const purchasedRedirect = props.purchased ? <Redirect to="/" /> : null;
+    checkoutSummary = (
+      <div>
+        {purchasedRedirect}
+        <CheckoutSummary
+          ingredients={props.ings}
+          checkoutCancelled={checkoutCancelledHandler}
+          checkoutContinued={checkoutContinuedHandler}
+        />
+        <Route
+          path={props.match.path + "/contact-details"}
+          component={ContactDetails}
+        />
+      </div>
+    );
   }
-}
+
+  return checkoutSummary;
+};
 
 const mapStateToProps = state => {
   return {
@@ -45,4 +42,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(Checkout);
+export default connect(mapStateToProps)(checkout);
