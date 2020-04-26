@@ -4,6 +4,7 @@ import { updateObject } from '../utility';
 const initialState = {
   token: null,
   userId: null,
+  userData: {},
   error: null,
   loading: false,
   authRedirectPath: '/' 
@@ -21,12 +22,25 @@ const reducer = (state = initialState, action) => {
         error: null,
         loading: false
       });
+
+    case actionTypes.FETCH_USER_DATA_START:
+      return updateObject(state, {
+        error: null, loading: true
+      });
+      
+    
+    case actionTypes.FETCH_USER_DATA_SUCCESS:
+      return updateObject(state, {
+        userData: action.userData,
+        error: null,
+        loading: false
+      });
     
     case actionTypes.AUTH_FAIL:
       return updateObject(state, {error: action.error, loading: false});
 
     case actionTypes.AUTH_LOGOUT:
-      return updateObject(state, { token: null, userId: null});
+      return updateObject(state, { token: null, userId: null, userData: {}});
 
     case actionTypes.SET_AUTH_REDIRECT_PATH:
       return updateObject(state, {authRedirectPath: action.path});

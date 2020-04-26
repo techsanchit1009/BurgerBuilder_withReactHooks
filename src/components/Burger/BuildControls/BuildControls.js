@@ -13,7 +13,7 @@ const controls = [
 const buildControls = props => {
   return (
     <div className={classes.BuildControls}>
-      <p>Current Burger price:  <strong>₹ {props.totalPrice}</strong>(incl of Taxes)</p>
+      <p>Current Burger price:  <strong>₹ {props.totalPrice}</strong></p>
       {controls.map(ctrl => {       
         return (
           <BuildControl

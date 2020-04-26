@@ -2,11 +2,11 @@ import * as actionTypes from '../actions/actionTypes';
 import { updateObject } from '../utility';
 
 const INGREDIENT_PRICES = {
-  lettuce: 5,
-  cheese: 20,
-  meat: 30,
-  onion: 10,
-  tomato: 10
+  lettuce: 20,
+  cheese: 40,
+  meat: 60,
+  onion: 30,
+  tomato: 30
 };
 
 const initialState = {

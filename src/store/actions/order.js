@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes';
-import axios from '../../axios-orders';
+import firebase from '../../Firestore';
+
+const db = firebase.firestore();
 
 export const purchaseBurgerSuccess = (id, orderData) => {
   return {
@@ -22,18 +24,19 @@ export const purchaseBurgerStart = () => {
   }
 };
 
-export const purchaseBurger = (orderData, token) => {
+export const purchaseBurger = (orderData, userId) => {
   return dispatch => {
+    orderData = {
+      ...orderData,
+      status: 'pending'
+    }
     dispatch(purchaseBurgerStart());
-    axios
-      .post("/orders.json?auth=" + token, orderData)
-      .then(response => {
-        console.log(response);
-        dispatch(purchaseBurgerSuccess(response.data.name, orderData));
+    db.collection('users').doc(userId)
+      .collection('orders').doc(orderData.orderId)
+      .set(orderData)
+      .then(() => {
+        dispatch(purchaseBurgerSuccess(orderData.orderId, orderData));
         alert("Order Placed Successfully");
-      })
-      .catch(err => {
-        dispatch(purchaseBurgerFail(err))
       });
   }
 };
@@ -64,32 +67,43 @@ export const fetchOrdersStart = () => {
   };
 };
 
-export const fetchOrders = (token, userId) => {
+export const fetchOrders = (userId) => {
   return dispatch => {
+    const ordersArray = [];
+    // console.log('orders:', orders);
     dispatch(fetchOrdersStart());
-    const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
-    axios.get('/orders.json' + queryParams)
-    .then(res => {
-      const fetchedOrders = [];
-      for(let key in res.data){
-        fetchedOrders.push({
-          ...res.data[key],
-          id: key
+    db.collection('users').doc(userId).collection('orders').get()
+        .then(snapshot => {
+          snapshot.docs.forEach(doc => {
+            ordersArray.push(doc.data());
+          });
+          dispatch(fetchOrdersSuccess(ordersArray));
         });
-      }
-      console.log(fetchedOrders);
-      
-      dispatch(fetchOrdersSuccess(fetchedOrders));
-    })
-    .catch(err => {
-      dispatch(fetchOrdersFail(err))
-    });
   };
 };
 
-export const orderDelete = (id) => {
+export const orderCancelStart = () => {
   return {
-    type: actionTypes.ORDER_DELETE,
+    type: actionTypes.ORDER_CANCEL_START
+  };
+};
+
+export const orderCancel = (userId, orderId) => {
+  return dispatch => {
+    dispatch(orderCancelStart());
+    db.collection('users').doc(userId).collection('orders').doc(orderId)
+        .update({
+          status: 'cancelled'
+        }).then(() => {
+          console.log('order cancelled successfully');
+          dispatch(orderCancelSuccess(orderId));
+        })
+  }
+}
+
+export const orderCancelSuccess = (id) => {
+  return {
+    type: actionTypes.ORDER_CANCEL_SUCCESS,
     orderId: id
   }
 }

@@ -10,7 +10,7 @@ import { checkValidity } from "../../shared/validation";
 import * as actions from "../../store/actions/index";
 
 const auth = props => {
-  const [authForm, setAuthForm] = useState({
+  const [loginForm, setLoginForm] = useState({
     email: {
       elementType: "input",
       elementConfig: {
@@ -27,7 +27,7 @@ const auth = props => {
     },
 
     password: {
-      elementType: "input",
+      elementType: "password",
       elementConfig: {
         type: "password",
         placeholder: "Password"
@@ -35,12 +35,73 @@ const auth = props => {
       value: "",
       validation: {
         required: true,
-        minLength: 6
+        isPassword: true
       },
       valid: false,
       touched: false
     }
-  });
+  }); 
+
+  const [signupForm, setSignupForm] = useState({
+    name: {
+      elementType: "input",
+      elementConfig: {
+        type: "text",
+        placeholder: "Full Name"
+      },
+      value: "",
+      validation: {
+        required: true,
+      },
+      valid: false,
+      touched: false
+    },
+
+    phone: {
+      elementType: "input",
+      elementConfig: {
+        type: "text",
+        placeholder: "Phone Number"
+      },
+      value: "",
+      validation: {
+        required: true,
+        isPhone: true
+      },
+      valid: false,
+      touched: false
+    },
+
+    email: {
+      elementType: "input",
+      elementConfig: {
+        type: "email",
+        placeholder: "Email ID"
+      },
+      value: "",
+      validation: {
+        required: true,
+        isEmail: true
+      },
+      valid: false,
+      touched: false
+    },
+
+    password: {
+      elementType: "password",
+      elementConfig: {
+        type: "password",
+        placeholder: "Password"
+      },
+      value: "",
+      validation: {
+        required: true,
+        isPassword: true
+      },
+      valid: false,
+      touched: false
+    },
+  }); 
 
   const [isSignup, setIsSignUp] = useState(false);
   const [formIsValid, setFormIsValid] = useState(false);
@@ -53,15 +114,17 @@ const auth = props => {
     }
   }, [buildingBurger, authRedirectPath, onSetAuthRedirectPath]);
 
+  const formType = isSignup ? signupForm : loginForm;
+  
   const inputChangedHandler = (event, controlName) => {
     const updatedControls = {
-      ...authForm,
+      ...formType,
       [controlName]: {
-        ...authForm[controlName],
+        ...formType[controlName],
         value: event.target.value,
         valid: checkValidity(
           event.target.value,
-          authForm[controlName].validation
+          formType[controlName].validation
         ),
         touched: true
       }
@@ -70,13 +133,28 @@ const auth = props => {
     for (let controlName in updatedControls) {
       formIsValid = updatedControls[controlName].valid && formIsValid;
     }
-    setAuthForm(updatedControls);
+    if(isSignup){
+      setSignupForm(updatedControls)
+    } else {
+      setLoginForm(updatedControls);
+    }
     setFormIsValid(formIsValid);
   };
 
+
   const submitHandler = event => {
     event.preventDefault();
-    props.onAuth(authForm.email.value, authForm.password.value, isSignup);
+    if(isSignup){
+      const signupData = {
+        name: signupForm.name.value,
+        phone: signupForm.phone.value,
+        email: signupForm.email.value
+      }
+      props.onAuth(formType.email.value, formType.password.value, isSignup, signupData);
+    }
+    else{
+      props.onAuth(formType.email.value, formType.password.value, isSignup);
+    }
   };
 
   const switchAuthModeHandler = () => {
@@ -84,10 +162,10 @@ const auth = props => {
   };
 
   const formElementsArray = [];
-  for (let key in authForm) {
+  for (let key in formType) {
     formElementsArray.push({
       id: key,
-      config: authForm[key]
+      config: formType[key]
     });
   }
 
@@ -128,7 +206,7 @@ const auth = props => {
       <h1 className={classes.Heading}>
         {isSignup ? "Create a new Account!" : "Login"}
       </h1>
-      {errorMessage}
+      <p style={{ color: 'red', fontWeight: 'bold'}}>{errorMessage}</p>
       <form onSubmit={submitHandler}>
         {form}
         <Button btnType="Success" disabled={!formIsValid}>
@@ -151,15 +229,16 @@ const mapStateToProps = state => {
     error: state.auth.error,
     isAuthenitcated: state.auth.token !== null,
     buildingBurger: state.burgerBuilder.building,
-    authRedirectPath: state.auth.authRedirectPath
+    authRedirectPath: state.auth.authRedirectPath,
+    userId: state.auth.userId
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isSignup) =>
-      dispatch(actions.auth(email, password, isSignup)),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/"))
+    onAuth: (email, password, isSignup, userData) =>
+      dispatch(actions.auth(email, password, isSignup, userData)),
+    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath("/")),
   };
 };
 

@@ -1,0 +1,162 @@
+.Profile{
+  max-width: 70vw;
+  margin: auto;
+}
+
+.Profile h1{
+  font-family: 'Josefin Sans', sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ProfileBox{
+  display: flex;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px #ccc;
+  min-height: 90vh;
+  /* justify-content: center; */
+  /* max-width: 70vw; */
+  /* margin: auto; */
+}
+
+.ProfileContent{
+  flex: 3
+}
+
+.UserDetails, .RecentOrders{
+  margin: 1rem 1.5rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 1rem;
+}
+
+.UserDetails h3, .RecentOrders h3{
+  text-transform: uppercase;
+  word-spacing: 5px;
+}
+
+.InfoRow{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  margin: 1rem 0;
+  align-items: center;
+}
+
+.InfoHeading{
+  flex: 1;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+
+.InfoData{
+  flex: 2;
+}
+
+.OrdersList{
+  list-style: none;
+  padding: 0;
+}
+
+.OrderId{
+  position: relative;
+  padding: 0.7rem 1rem;
+}
+
+.OrderId li:first-child{
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.OrderId li:nth-child(2){
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+
+.OrderId a{
+  text-decoration: none;
+  color: black;
+}
+
+.OrderId a:hover{
+  text-decoration: underline;
+  transition: all 0.5s ease;
+}
+
+.Pending a{
+  color: darkcyan;
+}
+
+.Cancelled a{
+  color: rgb(211, 46, 46);
+}
+
+.Completed a{
+  color: green;
+}
+
+.ColorLabels{
+  display: flex;
+  max-width: 60%;
+  font-size: 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ColorBox{
+  display: inline-block;
+  height: 0.8rem;
+  width: 0.8rem;
+  margin-right: 2px;
+  border-radius: 2px;
+}
+
+
+.ImageBanner{
+  flex: 1;
+  background-image: url('../../../assets/images/profile-burger.jpg');
+  background-position: 50% 70%;
+  box-shadow: inset 5px 5px 10px rgb(97, 96, 96);
+}
+
+
+/* Animation on Load */
+@keyframes fadeInUp {
+  from {
+      transform: translate3d(0,20px,0)
+  }
+
+  to {
+      transform: translate3d(0,0,0);
+      opacity: 1
+  }
+}
+
+@-webkit-keyframes fadeInUp {
+  from {
+      transform: translate3d(0,40px,0)
+  }
+
+  to {
+      transform: translate3d(0,0,0);
+      opacity: 1
+  }
+}
+
+.Profile {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-fill-mode: both
+}
+
+
+.Profile {
+  opacity: 0;
+  animation-name: fadeInUp;
+  -webkit-animation-name: fadeInUp;
+}
+
+/*-----------------------*/
+

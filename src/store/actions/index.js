@@ -8,11 +8,13 @@ export {
   purchaseInit,
   purchaseBurger,
   fetchOrders,
-  orderDelete
+  orderCancel
  } from './order';
 
  export { 
    auth,
+   saveAuthData,
+   fetchUserData,
    logout,
    setAuthRedirectPath,
    authCheckState

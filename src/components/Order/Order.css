@@ -1,10 +1,28 @@
 .Order {
+  position: relative;
   width: 80%;
   border: 1px solid #eee;
   box-shadow: 0 2px 3px #aaa;
   padding: 10px;
   margin: 10px auto;
   box-sizing: border-box;
+}
+
+.OrderInfo{
+  display: flex;
+  justify-content: space-between;
+}
+
+.CancelledOrder{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: red;
+  font-size: 2.5rem;
+  border: 5px dashed red;
+  padding: 1rem;
+  transform-origin: center;
+  transform: rotate(-10deg) translate(-50%,-100%);
 }
 
 .Ingredients{
@@ -37,3 +55,42 @@
   color: white;
   transition: 0.3s;
 }
+
+/* Animation on Load */
+@keyframes fadeInUp {
+  from {
+      transform: translate3d(0,20px,0)
+  }
+
+  to {
+      transform: translate3d(0,0,0);
+      opacity: 1
+  }
+}
+
+@-webkit-keyframes fadeInUp {
+  from {
+      transform: translate3d(0,40px,0)
+  }
+
+  to {
+      transform: translate3d(0,0,0);
+      opacity: 1
+  }
+}
+
+.Order {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-fill-mode: both
+}
+
+
+.Order {
+  opacity: 0;
+  animation-name: fadeInUp;
+  -webkit-animation-name: fadeInUp;
+}
+
+/*-----------------------*/

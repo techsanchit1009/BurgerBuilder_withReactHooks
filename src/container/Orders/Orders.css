@@ -1,0 +1,17 @@
+.Orders{
+  max-width: 85vw;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+.Heading{
+  font-family: 'Josefin Sans', sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.OrderList{
+  box-shadow: 0 0 10px #ccc;
+  max-height: 75vh;
+  overflow-y: scroll;
+}

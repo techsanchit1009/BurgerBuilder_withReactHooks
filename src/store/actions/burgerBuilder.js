@@ -1,5 +1,7 @@
 import * as actionTypes from './actionTypes';
-import axios from "../../axios-orders";
+import firebase from '../../Firestore';
+
+const db = firebase.firestore();
 
 export const addIngredient = name => {
   return {
@@ -31,12 +33,11 @@ export const fetchIngredientsFailed = () => {
 
 export const initIngredients = () => {
   return dispatch => {
-    axios
-      .get("https://react-myburger-b7ad9.firebaseio.com/ingredients.json")
-      .then(response => {
-        dispatch(setIngredients(response.data));
+    db.collection('ingredients').doc('ingredients')
+      .get().then(snapshot => {
+        dispatch(setIngredients(snapshot.data()));
       })
-      .catch(error => {
+      .catch(err => {
         dispatch(fetchIngredientsFailed());
       });
   };

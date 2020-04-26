@@ -14,7 +14,7 @@ const buildControl = props => (
       className={classes.More} 
       onClick={props.added}>More</button>
     <div className={classes.Label}>₹ {props.igPrice}</div>
-    {props.igAmount>0 ? <span className={classes.IgAmount}>{props.igAmount}</span> : <span>&nbsp;</span>}
+    {props.igAmount ? <span className={classes.IgAmount}>{props.igAmount}</span> : <span>&nbsp;</span>}
   </div>
 );
 export default buildControl;

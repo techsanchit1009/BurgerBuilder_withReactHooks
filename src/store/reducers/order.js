@@ -23,6 +23,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.PURCHASE_BURGER_SUCCESS:
       const newOrder = {
         id: action.orderId,
+        status: 'pending',
         ...action.orderData,
       };
       return {
@@ -56,12 +57,23 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false
       };
-
-    case actionTypes.ORDER_DELETE:
-      const updatedOrders = state.orders.filter((order) => order.id !== action.orderId);
+    
+    case actionTypes.ORDER_CANCEL_START:
       return {
         ...state,
-        orders: updatedOrders
+        loading: true
+      }
+
+    case actionTypes.ORDER_CANCEL_SUCCESS:
+      const index = state.orders.findIndex(order => order.orderId === action.orderId );
+      const updatedIndex = {
+        ...state.orders[index],
+        status: 'cancelled'
+      }
+      state.orders[index] = updatedIndex;
+      return {
+        ...state, 
+        loading: false
       };
 
     default:

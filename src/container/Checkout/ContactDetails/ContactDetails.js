@@ -18,12 +18,12 @@ const contactDetails = props => {
           type: "text",
           placeholder: "Full Name"
         },
-        value: "",
+        value: props.userData.name,
         validation: {
           required: true
         },
-        valid: false,
-        touched: false
+        valid: true,
+        touched: true
       },
 
       address: {
@@ -76,12 +76,13 @@ const contactDetails = props => {
           type: "email",
           placeholder: "Email ID"
         },
-        value: "",
+        value: props.userData.email,
         validation: {
-          required: true
+          required: true,
+          isEmail: true
         },
-        valid: false,
-        touched: false
+        valid: true,
+        touched: true,
       },
 
       paymentMode: {
@@ -89,7 +90,7 @@ const contactDetails = props => {
         elementConfig: {
           options: [
             { value: "cash", displayValue: "Cash on Delivery" },
-            { value: "card", displayValue: "Visa/ MasterCard" },
+            { value: "card", displayValue: "Visa / MasterCard" },
             { value: "upi", displayValue: "Bhim UPI" }
           ]
         },
@@ -113,10 +114,10 @@ const contactDetails = props => {
       ingredients: props.ings,
       price: props.price,
       orderData: formData,
-      userId: props.userId
+      orderId: new Date().getTime().toString()
     };
-    console.log(order);
-    props.onOrderBurger(order, props.token);
+    // console.log(order);
+    props.onOrderBurger(order, props.userId);
 
   };
 
@@ -159,6 +160,7 @@ const contactDetails = props => {
             value={formElement.config.value}
             invalid={!formElement.config.valid}
             touched={formElement.config.touched}
+            disabled={formElement.config.disabled}
             shouldValidate={formElement.config.validation}
             changed={event => inputChangedHandler(event, formElement.id)}
           />
@@ -179,18 +181,20 @@ const contactDetails = props => {
 }
 
 const mapStateToProps = state => {
+  console.log(state);
   return { 
     ings: state.burgerBuilder.ingredients,
     price: state.burgerBuilder.totalPrice,
     loading: state.order.loading,
     token: state.auth.token,
-    userId: state.auth.userId
+    userId: state.auth.userId,
+    userData: state.auth.userData
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onOrderBurger:(orderData, token) => dispatch(orderActions.purchaseBurger(orderData, token))
+    onOrderBurger:(orderData, userId) => dispatch(orderActions.purchaseBurger(orderData, userId))
   }
 }
 

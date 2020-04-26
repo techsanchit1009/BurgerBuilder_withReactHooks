@@ -1,5 +1,6 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
+import Firebase from '../../Firestore';
 
 export const authStart = () => {
   return {
@@ -22,6 +23,19 @@ export const authFail = (error) => {
   };
 };
 
+export const fetchUserDataStart = () => {
+  return {
+    type: actionTypes.FETCH_USER_DATA_START
+  };
+};
+
+export const fetchUserDataSuccess = (userData) => {
+  return{
+    type: actionTypes.FETCH_USER_DATA_SUCCESS,
+    userData: userData
+  }
+}
+
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('expirationDate');
@@ -39,7 +53,7 @@ export const checkAuthTimeout = (expirationTime) => {
   };
 };
 
-export const auth = (email, password, isSignup) => {
+export const auth = (email, password, isSignup, userData=null) => {
   return dispatch =>{
     dispatch(authStart());
     const api_key = 'AIzaSyA9DzyeqeO-_ij9twoBunZFd8BEXirRxBE';
@@ -52,15 +66,21 @@ export const auth = (email, password, isSignup) => {
     if(!isSignup){
       url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${api_key}`
     }
-
     axios.post(url, authData)
       .then(response => {
+        console.log(response);
         const expirationDate = new Date(new Date().getTime() + response.data.expiresIn * 1000);
         localStorage.setItem('token',response.data.idToken);
         localStorage.setItem('expirationDate', expirationDate);
         localStorage.setItem('userId', response.data.localId);
         dispatch(authSuccess(response.data.idToken, response.data.localId));
         dispatch(checkAuthTimeout(response.data.expiresIn));
+        if(isSignup && userData){
+          dispatch(saveAuthData(response.data.localId, userData));
+        } else {
+            dispatch(fetchUserData(response.data.localId));
+        } 
+      
       })
       .catch(err => {
         dispatch(authFail(err.response.data.error));
@@ -75,6 +95,23 @@ export const setAuthRedirectPath = path => {
   };
 };
 
+export const saveAuthData = (userId, userData) => {
+  console.log(userData);
+  return dispatch => {
+    const db = Firebase.firestore();
+    db.collection('users').doc(userId).set(userData);
+  }
+}
+
+export const fetchUserData = (userId) => {
+  return dispatch => {
+    const db = Firebase.firestore();
+    dispatch(fetchUserDataStart());
+    db.collection('users').doc(userId).get()
+    .then(snapshot => dispatch(fetchUserDataSuccess(snapshot.data())));
+  }
+}
+
 export const authCheckState = () => {
   return dispatch => {
     const token = localStorage.getItem('token');
@@ -88,6 +125,7 @@ export const authCheckState = () => {
       } else{
         const userId = localStorage.getItem('userId');
         dispatch(authSuccess(token, userId));
+        dispatch(fetchUserData(userId));
         dispatch(checkAuthTimeout((expirationDate.getTime() - new Date().getTime()) / 1000));
       }
     }
