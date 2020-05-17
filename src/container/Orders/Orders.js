@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import classes from "./Orders.css";
+import classes from "./Orders.module.css";
 import axios from "../../axios-orders";
 import Order from "../../components/Order/Order";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";

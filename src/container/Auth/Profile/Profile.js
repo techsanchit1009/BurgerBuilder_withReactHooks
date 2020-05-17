@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import classes from "./Profile.css";
+import classes from "./Profile.module.css";
 import firebase from "../../../Firestore";
 import * as action from "../../../store/actions/index";
 import Spinner from "../../../components/UI/Spinner/Spinner";

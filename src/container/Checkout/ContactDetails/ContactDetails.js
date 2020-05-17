@@ -4,7 +4,7 @@ import Button from "../../../components/UI/Button/Button";
 import { withRouter } from "react-router-dom";
 import axios from "../../../axios-orders";
 import Spinner from "../../../components/UI/Spinner/Spinner";
-import classes from "./ContactDetails.css";
+import classes from "./ContactDetails.module.css";
 import Input from "../../../components/UI/Input/Input";
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import { checkValidity } from '../../../shared/validation';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import classes from "./NavigationItems.css";
+import classes from "./NavigationItems.module.css";
 import NavigationItem from "./NavigationItem/NavigationItem";
 import Aux from "../../../hoc/Aux/Aux";
 import { connect } from "react-redux";

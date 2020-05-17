@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import classes from './Input.css'
+import classes from './Input.module.css'
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const input = props => {
