@@ -1,7 +1,5 @@
 import * as actionTypes from './actionTypes';
-import firebase from '../../Firestore';
-
-const db = firebase.firestore();
+import axios from 'axios';
 
 export const purchaseBurgerSuccess = (id, orderData) => {
   return {
@@ -31,13 +29,11 @@ export const purchaseBurger = (orderData, userId) => {
       status: 'pending'
     }
     dispatch(purchaseBurgerStart());
-    db.collection('users').doc(userId)
-      .collection('orders').doc(orderData.orderId)
-      .set(orderData)
-      .then(() => {
-        dispatch(purchaseBurgerSuccess(orderData.orderId, orderData));
-        alert("Order Placed Successfully");
-      });
+    axios.post(`http://localhost:5000/orders/${userId}`, orderData)
+        .then(resp => {
+          alert(resp.data.message);
+          dispatch(purchaseBurgerSuccess(orderData.orderId, orderData));   
+        })
   }
 };
 
@@ -69,16 +65,11 @@ export const fetchOrdersStart = () => {
 
 export const fetchOrders = (userId) => {
   return dispatch => {
-    const ordersArray = [];
-    // console.log('orders:', orders);
     dispatch(fetchOrdersStart());
-    db.collection('users').doc(userId).collection('orders').get()
-        .then(snapshot => {
-          snapshot.docs.forEach(doc => {
-            ordersArray.push(doc.data());
+    axios.get(`http://localhost:5000/orders/${userId}`)
+          .then(resp => {
+            dispatch(fetchOrdersSuccess(resp.data))
           });
-          dispatch(fetchOrdersSuccess(ordersArray));
-        });
   };
 };
 
@@ -91,13 +82,11 @@ export const orderCancelStart = () => {
 export const orderCancel = (userId, orderId) => {
   return dispatch => {
     dispatch(orderCancelStart());
-    db.collection('users').doc(userId).collection('orders').doc(orderId)
-        .update({
-          status: 'cancelled'
-        }).then(() => {
-          console.log('order cancelled successfully');
-          dispatch(orderCancelSuccess(orderId));
-        })
+    axios.patch(`http://localhost:5000/orders/${userId}/${orderId}`)
+          .then(resp => {
+            console.log(resp);
+            dispatch(orderCancelSuccess(orderId));
+          });
   }
 }
 

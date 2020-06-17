@@ -1,51 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import classes from "./Profile.module.css";
-import firebase from "../../../Firestore";
 import * as action from "../../../store/actions/index";
 import Spinner from "../../../components/UI/Spinner/Spinner";
 import Aux from "../../../hoc/Aux/Aux";
 
-// db.collection('users').doc(userId).collection('orders').get()
-// .then(snapshot => {
-//   snapshot.docs.forEach(doc => {
-//     ordersArray.push(doc.data());
-//     console.log(doc.data())
-//   });
-
 const Profile = (props) => {
-  const [ordersList, setOrdersList] = useState([]);
 
   useEffect(() => {
     if (props.userId) {
       props.onFetchUserData(props.userId);
+      props.onFetchOrders(props.userId)
     }
-  }, [props.onFetchUserData, props.userId]);
+  }, [props.onFetchUserData, props.onFetchOrders, props.userId]);
 
-  useEffect(() => {
-    const db = firebase.firestore();
-    const list = [];
-    if (props.userId) {
-      db.collection("users")
-        .doc(props.userId)
-        .collection("orders")
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            let order = {
-              orderId: doc.data().orderId,
-              status: doc.data().status,
-            };
-
-            console.log(order);
-            list.push(order);
-          });
-          console.log(list);
-          setOrdersList(list);
-        });
-    }
-  }, [props.userId]);
 
   const formatTime = (orderTime) => {
     let fullTimeArr = new Date(orderTime).toString().split(" ");
@@ -96,7 +65,7 @@ const Profile = (props) => {
 
           <div className={classes.RecentOrders}>
             <h3>Recent Orders</h3>
-            {ordersList.length ? (
+            {props.orders.length ? (
               <div className={classes.OrdersListArea}>
                 <div className={classes.ColorLabels}>
                   <div>
@@ -122,7 +91,7 @@ const Profile = (props) => {
                   </div>
                 </div>
                 <ul className={classes.OrdersList}>
-                  {ordersList
+                  {props.orders
                     .slice(-5)
                     .reverse()
                     .map((order) => (
@@ -154,6 +123,7 @@ const Profile = (props) => {
 
 const mapStateToProps = (state) => {
   return {
+    orders: state.order.orders,
     userId: state.auth.userId,
     userData: state.auth.userData,
     loading: state.auth.loading,
@@ -163,6 +133,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onFetchUserData: (userId) => dispatch(action.fetchUserData(userId)),
+    onFetchOrders: (userId) => dispatch(action.fetchOrders(userId)),
   };
 };
 

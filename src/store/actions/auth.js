@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
 import axios from 'axios';
-import Firebase from '../../Firestore';
 
 export const authStart = () => {
   return {
@@ -77,10 +76,8 @@ export const auth = (email, password, isSignup, userData=null) => {
         dispatch(checkAuthTimeout(response.data.expiresIn));
         if(isSignup && userData){
           dispatch(saveAuthData(response.data.localId, userData));
-        } else {
-            dispatch(fetchUserData(response.data.localId));
-        } 
-      
+        }
+         dispatch(fetchUserData(response.data.localId));      
       })
       .catch(err => {
         dispatch(authFail(err.response.data.error));
@@ -98,17 +95,20 @@ export const setAuthRedirectPath = path => {
 export const saveAuthData = (userId, userData) => {
   console.log(userData);
   return dispatch => {
-    const db = Firebase.firestore();
-    db.collection('users').doc(userId).set(userData);
+    axios.post(`http://localhost:5000/user/${userId}`, userData)
+        .then(resp => {
+          console.log(resp);
+        })
   }
 }
 
 export const fetchUserData = (userId) => {
   return dispatch => {
-    const db = Firebase.firestore();
     dispatch(fetchUserDataStart());
-    db.collection('users').doc(userId).get()
-    .then(snapshot => dispatch(fetchUserDataSuccess(snapshot.data())));
+    axios.get(`http://localhost:5000/user/${userId}`)
+        .then(resp => {
+          dispatch(fetchUserDataSuccess(resp.data));
+        });
   }
 }
 

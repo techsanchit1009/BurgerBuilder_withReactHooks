@@ -1,7 +1,5 @@
 import * as actionTypes from './actionTypes';
-import firebase from '../../Firestore';
-
-const db = firebase.firestore();
+import axios from 'axios';
 
 export const addIngredient = name => {
   return {
@@ -33,12 +31,13 @@ export const fetchIngredientsFailed = () => {
 
 export const initIngredients = () => {
   return dispatch => {
-    db.collection('ingredients').doc('ingredients')
-      .get().then(snapshot => {
-        dispatch(setIngredients(snapshot.data()));
-      })
-      .catch(err => {
-        dispatch(fetchIngredientsFailed());
-      });
+    axios.get('http://localhost:5000/burgerIng')
+        .then(resp => {
+          dispatch(setIngredients(resp.data));
+        })
+        .catch(err => {
+          console.log(err.response);
+          dispatch(fetchIngredientsFailed());
+        })  
   };
 };
