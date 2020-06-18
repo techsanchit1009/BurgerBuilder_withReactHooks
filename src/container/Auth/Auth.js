@@ -218,6 +218,7 @@ const auth = props => {
           ? "Already have an account? Sign In"
           : "New User? Sign Up now!"}
       </Button>
+      <a href="http://localhost:5000/auth/google">Google Login</a>
       {props.isAuthenitcated ? <Redirect to={props.authRedirectPath} /> : null}
     </div>
   );

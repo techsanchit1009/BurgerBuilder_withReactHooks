@@ -13,6 +13,7 @@ export {
 
  export { 
    auth,
+   googleAuth,
    saveAuthData,
    fetchUserData,
    logout,
