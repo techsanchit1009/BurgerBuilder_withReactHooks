@@ -6,7 +6,6 @@ const db = firebase.firestore();
 router.get('/burgerIng', (req, res) => {
   db.collection('ingredients').doc('ingredients')
   .get().then(snapshot => {
-    console.log('inside');
     res.send(snapshot.data());
   })
   .catch(err => {

@@ -25,7 +25,6 @@ router.post('/orders/:userId', (req, res) => {
 });
 
 router.patch('/orders/:userId/:orderId', (req, res) => {
-  console.log(req.params);
   const {userId, orderId} = req.params;
   db.collection('users').doc(userId).collection('orders').doc(orderId)
   .update({

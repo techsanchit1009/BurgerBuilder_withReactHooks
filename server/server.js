@@ -3,7 +3,13 @@ const PORT = 5000;
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const cookieSession = require('cookie-session');
+const cookieParser = require('cookie-parser');
+const keys = require('./Config/keys.config');
+const passport = require('passport');
 const routes = require('./Routes/routes');
+
+require('./PayPal/paypal'); // PayPal configuration
 
 const headers = {
   origin: '*',
@@ -12,6 +18,21 @@ const headers = {
   exposedHeaders: ['Access-Control-Allow-Origin'],
   credentials: true // allow session cookie from browser to pass through 
 }
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: [keys.COOKIE_KEY],
+    maxAge: 24 * 60 * 60 * 1000
+  })
+);
+
+app.use(cookieParser()); // Parse cookie to get req.cookies
+
+app.use(passport.initialize()); // Initialize
+app.use(passport.session());
+
+require('./Passport/passport-google.auth')(passport); // Google Passport OAuth Config
 
 app.use(cors(headers));
 app.use(bodyParser.json());

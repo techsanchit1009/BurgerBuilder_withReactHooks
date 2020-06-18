@@ -11,9 +11,9 @@ router.get('/user/:userId', (req, res) => {
 });
 
 router.post('/user/:userId', (req, res) => {
-  console.log(req.body);
   db.collection('users').doc(req.params.userId).set(req.body);
   res.send({message: 'User Data saved'});
 });
+
 
 module.exports = router;
